@@ -1,0 +1,14 @@
+.idea/
+*.sln.iml
+*.suo
+*.user
+
+bin/
+obj/
+[Bb]uild/
+
+.DS_Store
+Thumbs.db
+
+packages/
+Published/
