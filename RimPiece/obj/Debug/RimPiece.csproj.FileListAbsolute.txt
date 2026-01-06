@@ -1,0 +1,9 @@
+/home/thiago/RiderProjects/RimPiece/RimPiece/bin/Debug/RimPiece.dll
+/home/thiago/RiderProjects/RimPiece/RimPiece/bin/Debug/RimPiece.pdb
+/games/steam/steamapps/common/RimWorld/Mods/RimPiece/1.6/Assemblies/RimPiece.dll
+/games/steam/steamapps/common/RimWorld/Mods/RimPiece/1.6/Assemblies/RimPiece.pdb
+/home/thiago/RiderProjects/RimPiece/RimPiece/obj/Debug/RimPiece.csproj.AssemblyReference.cache
+/home/thiago/RiderProjects/RimPiece/RimPiece/obj/Debug/RimPiece.csproj.CoreCompileInputs.cache
+/home/thiago/RiderProjects/RimPiece/RimPiece/obj/Debug/RimPiece.csproj.CopyComplete
+/home/thiago/RiderProjects/RimPiece/RimPiece/obj/Debug/RimPiece.dll
+/home/thiago/RiderProjects/RimPiece/RimPiece/obj/Debug/RimPiece.pdb
