@@ -58,8 +58,12 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Class1.cs"/>
+        <Compile Include="Components\CompHaki.cs" />
+        <Compile Include="Components\CompPropertiesHaki.cs" />
+        <Compile Include="Patches\PatchDamage.cs" />
+        <Compile Include="RimPiece.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="UI\ITab_Pawn_Haki.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
