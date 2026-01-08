@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <TaranMagicFramework.AbilityClassDef>
+        <defName>RimPieceHakiClass</defName>
+        <label>Haki</label>
+        <description>The power of ambition.</description>
+        <abilityTrees>
+            <li>RimPieceHakiTreeBasic</li>
+        </abilityTrees>
+        <unlockedByDefault>false</unlockedByDefault>
+        <usesXPSystem>false</usesXPSystem>
+        <abilityResource>RimPieceHakiResource</abilityResource>
+    </TaranMagicFramework.AbilityClassDef>
+
+    <TaranMagicFramework.AbilityTreeDef>
+        <defName>RimPieceHakiTreeBasic</defName>
+        <label>Basic Haki</label>
+        <unlockedByDefault>true</unlockedByDefault>
+    </TaranMagicFramework.AbilityTreeDef>
+
+    <TaranMagicFramework.AbilityResourceDef>
+        <defName>RimPieceHakiResource</defName>
+        <label>Haki</label>
+        <maxEnergyStat>RimPieceMaxHaki</maxEnergyStat>
+        <baseEnergyGainPerTick>0.1</baseEnergyGainPerTick>
+    </TaranMagicFramework.AbilityResourceDef>
+
+    <StatDef>
+        <defName>RimPieceMaxHaki</defName>
+        <label>Max Haki</label>
+        <defaultBaseValue>100</defaultBaseValue>
+        <alwaysHide>true</alwaysHide>
+    </StatDef>
+</Defs>

@@ -16,8 +16,9 @@ namespace RimPiece.Patches
             if (hitThing is Pawn pawn && !pawn.Dead)
             {
                 var haki = pawn.GetComp<CompHaki>();
+                var isObservationActive = pawn.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
                 
-                if (haki != null && haki.ObservationLevel >= 10)
+                if (haki != null && isObservationActive && haki.ObservationLevel >= 10)
                 {
                     if (Rand.Value < haki.GetFutureSightChance())
                     {

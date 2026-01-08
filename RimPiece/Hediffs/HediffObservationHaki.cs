@@ -1,7 +1,5 @@
 using Verse;
-using RimWorld;
 using System.Text;
-using UnityEngine;
 using RimPiece.Components;
 
 namespace RimPiece.Hediffs
@@ -19,10 +17,10 @@ namespace RimPiece.Hediffs
                 if (hakiComp == null) return base.Description;
 
                 var level = hakiComp.ObservationLevel;
-                if (level < 10) return "Something feels off: The user has heightened awareness.";
-                if (level < 30) return "Heightened Senses: The user feels threats before they happen.";
-                if (level < 70) return "Predictive Movement: The user reads intent, dodging attacks with ease.";
-                if (level < 90) return "Future Glimpses: The user can see moments into the future.";
+                if (level < 2) return "Something feels off: The user has heightened awareness.";
+                if (level < 6) return "Heightened Senses: The user feels threats before they happen.";
+                if (level < 14) return "Predictive Movement: The user reads intent, dodging attacks with ease.";
+                if (level < 18) return "Future Glimpses: The user can see moments into the future.";
                 return "Future Sight: The user sees seconds ahead, rewriting reality to avoid harm.";
             }
         }
@@ -45,7 +43,7 @@ namespace RimPiece.Hediffs
                     sb.AppendLine($"Melee Dodge Bonus: +{hakiComp.GetDodgeBonus():P0}");
                     sb.AppendLine($"Aim Time: x{hakiComp.GetAimDelayFactor():F2}");
                     
-                    if (hakiComp.ObservationLevel >= 50)
+                    if (hakiComp.ObservationLevel >= 14)
                         sb.AppendLine("Vitals Protection: Active (50% chance)");
                 }
                 return sb.ToString().TrimEnd();

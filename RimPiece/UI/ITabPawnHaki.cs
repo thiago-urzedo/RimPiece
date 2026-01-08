@@ -31,8 +31,18 @@ namespace RimPiece.UI
                 }
             }
         }
-        
-        public override bool IsVisible => SelPawnForHaki != null;
+
+        public override bool IsVisible
+        {
+            get
+            {
+                var pawn = this.SelPawnForHaki;
+
+                if (pawn == null || pawn.story == null) return false;
+
+                return pawn.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"));
+            }
+        }
 
         protected override void FillTab()
         {

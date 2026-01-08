@@ -19,24 +19,31 @@ namespace RimPiece.Patches
             if (pawn != null && !pawn.Dead)
             {
                 var pawnHaki = pawn.GetComp<CompHaki>();
+                var isArmamentActive = pawn.health.hediffSet.HasHediff(HediffDef.Named("RimPieceArmamentHaki"));
+                var isObservationActive = pawn.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
+                
                 if (pawnHaki != null)
                 {
                     var xpToGain = dinfo.Amount * 0.8f;
-                    pawnHaki.GainArmamentXp(xpToGain);
-                    pawnHaki.GainObservationXp(xpToGain * 0.4f);
                     
-                    var reduction = pawnHaki.GetIncomingDamageFactor();
-                    var newAmount = dinfo.Amount * reduction;
-                    dinfo.SetAmount(newAmount);
-                    
-                    if (pawnHaki.ObservationLevel >= 50 && dinfo.HitPart != null)
+                    if (isArmamentActive)
                     {
-                        bool isVital = dinfo.HitPart.def.tags.Contains(BodyPartTagDefOf.ConsciousnessSource) || 
-                                       dinfo.HitPart.def.tags.Contains(BodyPartTagDefOf.BloodPumpingSource);
+                        pawnHaki.GainArmamentXp(xpToGain);
                         
-                        if (isVital)
+                        var reduction = pawnHaki.GetIncomingDamageFactor();
+                        var newAmount = dinfo.Amount * reduction;
+                        dinfo.SetAmount(newAmount);
+                    }
+
+                    if (isObservationActive)
+                    {
+                        pawnHaki.GainObservationXp(xpToGain * 0.4f);
+                        if (pawnHaki.ObservationLevel >= 14 && dinfo.HitPart != null)
                         {
-                            if (Rand.Value < 0.5f)
+                            var isVital = dinfo.HitPart.def.tags.Contains(BodyPartTagDefOf.ConsciousnessSource) || 
+                                           dinfo.HitPart.def.tags.Contains(BodyPartTagDefOf.BloodPumpingSource);
+                            
+                            if (isVital && Rand.Value < 0.5f)
                             {
                                 MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "Vital Avoided!", Color.cyan);
                                 pawnHaki.GainObservationXp(xpToGain * 2f);
@@ -61,14 +68,16 @@ namespace RimPiece.Patches
                 if (attacker == pawn) return;
                 
                 var attackerHaki = attacker.GetComp<CompHaki>();
-                if (attackerHaki != null)
+                var isArmamentActive = attacker.health.hediffSet.HasHediff(HediffDef.Named("RimPieceArmamentHaki"));
+                
+                if (attackerHaki != null && isArmamentActive)
                 {
-                    float xpToGain = dinfo.Amount * 0.6f;
+                    var xpToGain = dinfo.Amount * 0.4f;
                     // Bonus XP if attack is melee
                     // TODO - review this in the future
                     if (!dinfo.Def.isRanged)
                     {
-                        xpToGain *= 1.25f;
+                        xpToGain *= 1.2f;
                     }
                     attackerHaki.GainArmamentXp(xpToGain);
 

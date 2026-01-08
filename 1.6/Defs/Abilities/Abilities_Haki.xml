@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <TaranMagicFramework.AbilityDef>
+        <defName>RimPieceArmamentToggle</defName>
+        <label>Armament Hardening</label>
+        <description>Coat your body in Haki to increase damage and defense.</description>
+        <uiSkillIcon>UI/Icons/armament</uiSkillIcon>
+        <abilityClass>TaranMagicFramework.Ability_Toggleable</abilityClass>
+        <abilityModGroup>RimPieceModGroup</abilityModGroup>
+        <abilityTrees>
+            <li>RimPieceHakiTreeBasic</li>
+        </abilityTrees>
+        <abilityTiers>
+            <li>RimPieceArmamentTier1</li>
+        </abilityTiers>
+    </TaranMagicFramework.AbilityDef>
+
+    <TaranMagicFramework.AbilityTierDef>
+        <defName>RimPieceArmamentTier1</defName>
+        <label>Armament Hardening</label>
+        <iconTexPath>UI/Icons/armament</iconTexPath>
+        <maxCharge>1</maxCharge>
+        <rechargeDuration>60</rechargeDuration>
+        <cooldownTicks>60</cooldownTicks>
+        <castDurationTicks>0</castDurationTicks>
+        <hediffProps>
+            <hediff>RimPieceArmamentHaki</hediff>
+            <onTarget>false</onTarget>
+        </hediffProps>
+    </TaranMagicFramework.AbilityTierDef>
+
+    <TaranMagicFramework.AbilityDef>
+        <defName>RimPieceObservationToggle</defName>
+        <label>Observation Focus</label>
+        <description>Focus your senses to predict attacks.</description>
+        <uiSkillIcon>UI/Icons/observation</uiSkillIcon>
+        <abilityClass>TaranMagicFramework.Ability_Toggleable</abilityClass>
+        <abilityModGroup>RimPieceModGroup</abilityModGroup>
+        <abilityTrees>
+            <li>RimPieceHakiTreeBasic</li>
+        </abilityTrees>
+        <abilityTiers>
+            <li>RimPieceObservationTier1</li>
+        </abilityTiers>
+    </TaranMagicFramework.AbilityDef>
+
+    <TaranMagicFramework.AbilityTierDef>
+        <defName>RimPieceObservationTier1</defName>
+        <label>Observation Focus</label>
+        <iconTexPath>UI/Icons/observation</iconTexPath>
+        <maxCharge>1</maxCharge>
+        <rechargeDuration>60</rechargeDuration>
+        <cooldownTicks>60</cooldownTicks>
+        <castDurationTicks>0</castDurationTicks>
+        <hediffProps>
+            <hediff>RimPieceObservationHaki</hediff>
+        </hediffProps>
+    </TaranMagicFramework.AbilityTierDef>
+</Defs>

@@ -7,11 +7,6 @@
         <hediffClass>RimPiece.Hediffs.HediffArmamentHaki</hediffClass>
         <defaultLabelColor>(0.6, 0.8, 1.0)</defaultLabelColor>
         <isBad>false</isBad>
-        <stages>
-            <li>
-                <lifeThreatening>false</lifeThreatening>
-            </li>
-        </stages>
     </HediffDef>
     
     <HediffDef>
@@ -21,10 +16,5 @@
         <hediffClass>RimPiece.Hediffs.HediffObservationHaki</hediffClass>
         <defaultLabelColor>(0.6, 0.8, 1.0)</defaultLabelColor>
         <isBad>false</isBad>
-        <stages>
-            <li>
-                <lifeThreatening>false</lifeThreatening>
-            </li>
-        </stages>
     </HediffDef>
 </Defs>

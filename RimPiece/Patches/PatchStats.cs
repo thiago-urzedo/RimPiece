@@ -16,7 +16,7 @@ namespace RimPiece.Patches
             if (req.Thing is Pawn p)
             {
                 var haki = p.GetComp<CompHaki>();
-                if (haki == null || haki.ObservationLevel < 10) return;
+                if (haki == null || haki.ObservationLevel < 1) return;
 
                 var currentStat = GetStatDef(__instance);
                 

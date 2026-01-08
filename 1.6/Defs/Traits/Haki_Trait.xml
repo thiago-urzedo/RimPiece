@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <TraitDef>
+        <defName>RimPieceHakiUser</defName>
+        <commonality>0.05</commonality>
+        <degreeDatas>
+            <li>
+                <label>Haki User</label>
+                <description>This person has awakened their Haki, granting them the ability to harden their body and predict attacks.</description>
+                <statOffsets>
+                    <MentalBreakThreshold>-0.05</MentalBreakThreshold>
+                </statOffsets>
+            </li>
+        </degreeDatas>
+    </TraitDef>
+</Defs>

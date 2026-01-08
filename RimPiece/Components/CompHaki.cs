@@ -2,12 +2,14 @@ using Verse;
 using RimWorld;
 using UnityEngine;
 using System.Collections.Generic;
+using TaranMagicFramework;
+using AbilityDef = TaranMagicFramework.AbilityDef;
 
 namespace RimPiece.Components
 {
     public class CompHaki: ThingComp
     {
-        private const int MaxLevel = 100;
+        private const int MaxLevel = 20;
         private const float LevelScalingMultiplier = 3f;
         
         private float _armamentXp;
@@ -18,10 +20,10 @@ namespace RimPiece.Components
 
         public int ArmamentLevel => _armamentLevel;
         public float ArmamentXp => _armamentXp;
-        public float ArmamentMaxXp => Mathf.Min((_armamentLevel + 1) * 25f, 3000f);
+        public float ArmamentMaxXp => Mathf.Min((_armamentLevel + 1) * 100f, 3000f);
         public int ObservationLevel => _observationLevel;
         public float ObservationXp => _observationXp;
-        public float ObservationMaxXp => Mathf.Min((_observationLevel + 1) * 25f, 3000f);
+        public float ObservationMaxXp => Mathf.Min((_observationLevel + 1) * 100f, 3000f);
 
         public bool HasConquerors => _hasConquerors;
 
@@ -34,8 +36,8 @@ namespace RimPiece.Components
         {
             if (rawInput <= 0 || _armamentLevel >= MaxLevel) return;
             
-            var effectiveInput = Mathf.Clamp(rawInput, 0f, 50f);
-            var levelPenalty = 1f - (_armamentLevel / 120f);
+            var effectiveInput = Mathf.Clamp(rawInput, 0f, 100f);
+            var levelPenalty = 1f - (_armamentLevel / 25f);
             var finalXp = effectiveInput * levelPenalty *  LevelScalingMultiplier;
             
             AddArmamentXp(finalXp);
@@ -46,13 +48,11 @@ namespace RimPiece.Components
             if (amount <= 0) return;
 
             _armamentXp += amount;
-            var leveledUp = false;
     
             while (_armamentXp >= ArmamentMaxXp && _armamentLevel < MaxLevel)
             {
                 _armamentXp -= ArmamentMaxXp;
                 _armamentLevel++;
-                leveledUp = true;
         
                 if (parent is Pawn p && p.Faction != null && p.Faction.IsPlayer)
                 {
@@ -67,42 +67,33 @@ namespace RimPiece.Components
             }
 
             if (_armamentLevel >= MaxLevel) _armamentXp = 0;
-            if (leveledUp) EnsureHediff();
         }
 
         public float GetArmamentAPBonus()
         {
-            if (_armamentLevel < 10) return 1f;
-
-            var progress = _armamentLevel / 100f;
-            return Mathf.Pow(progress, 1.4f) * 0.5f;
+            return 1f + (_armamentLevel * 0.03f);
         }
 
         public float GetArmamentDamageFactor()
         {
-            if (_armamentLevel < 10) return 1f;
-            
-            return 1f + (_armamentLevel / 100f);
+            return 1f + (_armamentLevel * 0.03f);
         }
         
         public float GetArmamentFlatDamage()
         {
-            if (_armamentLevel < 20) return 0f;
-            return (_armamentLevel - 20) / 8f;
+            return 1f + (_armamentLevel * 0.7f);
         }
 
         public float GetIncomingDamageFactor()
         {
-            if (_armamentLevel < 10) return 1f;
-
-            return Mathf.Max(0.4f, 1f - (_armamentLevel * 0.006f));
+            return 1f - (_armamentLevel * 0.08f);
         }
         
         public bool TriggerRyuoChance()
         {
-            if (_armamentLevel < 70) return false;
+            if (_armamentLevel < 14) return false;
             
-            var chance = Mathf.Pow((_armamentLevel - 70) / 30f, 0.2f) * 0.3f;
+            var chance = Mathf.Pow((_armamentLevel - 14) / 6f, 0.2f) * 0.4f;
             return Rand.Value < chance;
         }
         
@@ -110,8 +101,8 @@ namespace RimPiece.Components
         {
             if (_observationLevel >= MaxLevel || rawInput <= 0) return;
 
-            var effectiveInput = Mathf.Clamp(rawInput, 0f, 50f);
-            var levelPenalty = 1f - (_observationLevel / 120f);
+            var effectiveInput = Mathf.Clamp(rawInput, 0f, 100f);
+            var levelPenalty = 1f - (_observationLevel / 25f);
             var finalXp = effectiveInput * levelPenalty *  LevelScalingMultiplier;
 
             AddObservationXp(finalXp);
@@ -122,13 +113,11 @@ namespace RimPiece.Components
             if (amount <= 0) return;
             
             _observationXp += amount;
-            var leveledUp = false;
 
             while (_observationXp >= ObservationMaxXp && _observationLevel < MaxLevel)
             {
                 _observationXp -= ObservationMaxXp;
                 _observationLevel++;
-                leveledUp = true;
                 
                 if (parent is Pawn p && p.Faction != null && p.Faction.IsPlayer)
                 {
@@ -142,26 +131,23 @@ namespace RimPiece.Components
             }
             
             if (_observationLevel >= MaxLevel) _observationXp = 0;
-            if (leveledUp) EnsureHediff();
         }
         
         public float GetFutureSightChance()
         {
-            if (_observationLevel < 10) return 0f;
-            var progress = _observationLevel / 100f;
-            return 0.05f + (Mathf.Pow(progress, 1.5f) * 0.55f);
+            return _observationLevel * 0.025f;
         }
 
         public float GetDodgeBonus()
         {
-            if (_observationLevel < 10) return 0f;
-            return (_observationLevel / 100f) * 0.50f;
+            if (_observationLevel < 1) return 0f;
+            return (_observationLevel / (float)MaxLevel) * 0.60f;
         }
 
         public float GetAimDelayFactor()
         {
-            if (_observationLevel < 10) return 1f;
-            return 1f - ((_observationLevel / 100f) * 0.40f);
+            if (_observationLevel < 1) return 1f;
+            return 1f - ((_observationLevel / (float)MaxLevel) * 0.40f);
         }
         
         public void UnlockConquerors()
@@ -169,30 +155,36 @@ namespace RimPiece.Components
             _hasConquerors = true;
         }
         
-        private void EnsureHediff()
+        private void CheckAndGrantAbilities(Pawn p)
         {
-            if (!(parent is Pawn p) || p.Dead) return;
-
-            var shouldHaveArmHediff = _armamentLevel > 0;
-            var armHakiHediff = p.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("RimPieceArmamentHaki"));
-            if (shouldHaveArmHediff && armHakiHediff == null)
-            {
-                p.health.AddHediff(HediffDef.Named("RimPieceArmamentHaki"));
-            }
-            else if (!shouldHaveArmHediff && armHakiHediff != null)
-            {
-                p.health.RemoveHediff(armHakiHediff);
-            }
+            if (p.story == null || !p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"))) return;
             
-            var shouldHaveObsHediff = _observationLevel > 0;
-            var obsHakiHeadiff = p.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("RimPieceObservationHaki"));
-            if (shouldHaveObsHediff && obsHakiHeadiff == null)
+            var compAbilities = p.GetComp<CompAbilities>();
+            if (compAbilities == null) return;
+
+            var hakiClassDef = DefDatabase<AbilityClassDef>.GetNamed("RimPieceHakiClass");
+            var hakiClass = compAbilities.GetAbilityClass(hakiClassDef);
+
+            if (hakiClass == null)
             {
-                p.health.AddHediff(HediffDef.Named("RimPieceObservationHaki"));
+                hakiClass = compAbilities.CreateAbilityClass(hakiClassDef, true);
+                Messages.Message($"{p.LabelShort} awakened their Haki!", p, MessageTypeDefOf.PositiveEvent);
             }
-            else if (!shouldHaveObsHediff && obsHakiHeadiff != null)
+            else if (!hakiClass.Unlocked)
             {
-                p.health.RemoveHediff(obsHakiHeadiff);
+                hakiClass.Unlocked = true;
+            }
+
+            var armAbility = DefDatabase<AbilityDef>.GetNamed("RimPieceArmamentToggle");
+            if (!hakiClass.Learned(armAbility))
+            {
+                hakiClass.LearnAbility(armAbility, false, 0); 
+            }
+
+            var obsAbility = DefDatabase<AbilityDef>.GetNamed("RimPieceObservationToggle");
+            if (!hakiClass.Learned(obsAbility))
+            {
+                hakiClass.LearnAbility(obsAbility, false, 0);
             }
         }
         
@@ -257,7 +249,7 @@ namespace RimPiece.Components
                         _armamentXp = 0;
                         _observationLevel = 0;
                         _observationXp = 0;
-                        EnsureHediff();
+                        // EnsureHediff();
                         Messages.Message("Haki levels reset.", MessageTypeDefOf.TaskCompletion, false);
                     }
                 };
@@ -269,23 +261,25 @@ namespace RimPiece.Components
             base.CompTick();
 
             // 1 second = 60 ticks
-            // Gain little observation xp every 10 seconds of combat, if engaging an enemy
+            // Gain little observation xp every second of combat, if engaging an enemy
             // TODO - review this in the future
-            if (parent is Pawn p && p.IsHashIntervalTick(600))
+            if (parent is Pawn p && p.Spawned && p.IsHashIntervalTick(60))
             {
-                if (p.Drafted && p.TargetCurrentlyAimingAt != null && _observationLevel < MaxLevel)
+
+                var isHakiUser = p.story != null && p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"));
+                if (isHakiUser)
                 {
-                    GainObservationXp(10f); 
+                    CheckAndGrantAbilities(p);
+                    
+                    var isObservationActive = p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
+                    if (isObservationActive && p.Drafted && p.TargetCurrentlyAimingAt != null)
+                    {
+                        GainObservationXp(1f); 
+                    }
                 }
             }
         }
         
-        public override void PostSpawnSetup(bool respawningAfterLoad)
-        {
-            base.PostSpawnSetup(respawningAfterLoad);
-            EnsureHediff();
-        }
-
         public override void PostExposeData()
         {
             base.PostExposeData();

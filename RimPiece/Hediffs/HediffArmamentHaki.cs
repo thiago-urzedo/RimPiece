@@ -18,10 +18,10 @@ namespace RimPiece.Hediffs
                 if (hakiComp == null) return base.Description;
 
                 var level = hakiComp.ArmamentLevel;
-                if (level < 10) return "Basic Hardening: User can slightly harden their skin to reduce pain.";
-                if (level < 30) return "Hardened Armament: Attacks deal more damage to structures and armor.";
-                if (level < 70) return "Spirit Vulcanization: Willpower compressed into a shell tougher than, turning user's body into a living weapon.";
-                if (level < 90) return "Internal Destruction (Ryuo): Haki flows into the target, destroying them from inside.";
+                if (level < 2) return "Basic Hardening: User can slightly harden their skin to reduce pain.";
+                if (level < 6) return "Hardened Armament: Attacks deal more damage to structures and armor.";
+                if (level < 14) return "Spirit Vulcanization: Willpower compressed into a shell tougher than, turning user's body into a living weapon.";
+                if (level < 18) return "Internal Destruction (Ryuo): Haki flows into the target, destroying them from inside.";
                 return "Advanced Ryuo: Mastery of Armament Haki, allowing the user to bypass physical defenses entirely.";
             }
         }
@@ -40,18 +40,21 @@ namespace RimPiece.Hediffs
                 {
                     sb.AppendLine("--- Armament Stats ---");
                     
-                    sb.AppendLine($"Melee AP Bonus: +{hakiComp.GetArmamentAPBonus():P0}");
+                    sb.AppendLine($"Melee AP Bonus: +{hakiComp.GetArmamentAPBonus()}");
                     sb.AppendLine($"Melee Dmg Factor: x{hakiComp.GetArmamentDamageFactor():F2}");
                     
                     var flatDmg = hakiComp.GetArmamentFlatDamage();
                     if (flatDmg > 0) sb.AppendLine($"Melee Flat Dmg: +{flatDmg:F1}");
 
-                    float reduction = 1f - hakiComp.GetIncomingDamageFactor();
+                    var reduction = 1f - hakiComp.GetIncomingDamageFactor();
+                    var armourBonus = hakiComp.ArmamentLevel * 0.04f;
                     sb.AppendLine($"Damage Reduction: {reduction:P1}");
+                    sb.AppendLine($"Armour Bonus: +{armourBonus:P0}");
+                    
 
                     if (hakiComp.ArmamentLevel >= 70)
                     {
-                        var ryuoChance = Mathf.Pow((hakiComp.ArmamentLevel - 70) / 30f, 1.2f) * 0.30f;
+                        var ryuoChance = Mathf.Pow((hakiComp.ArmamentLevel - 14) / 6f, 0.2f) * 0.4f;
                         sb.AppendLine($"Ryuo (Armor Bypass): {ryuoChance:P1} chance");
                     }
                 }
