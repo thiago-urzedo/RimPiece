@@ -12,9 +12,9 @@ namespace RimPiece
     {
         static RimPiece()
         {
-            Log.Message("[Rim Piece]: Entering the Grand Line...");
+            Log.Message("[Rim Piece] Entering the Grand Line...");
 
-            var harmony = new Harmony("com.urzedo.onepiece");
+            var harmony = new Harmony("com.urzedo.rimpiece");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             
             InjectHakiTab();
@@ -30,13 +30,13 @@ namespace RimPiece
                 {
                     humanDef.inspectorTabs = new List<System.Type>();
                 }
-                humanDef.inspectorTabs.Add(typeof(ITab_Pawn_Haki));
+                humanDef.inspectorTabs.Add(typeof(ITabPawnHaki));
                 
                 if (humanDef.inspectorTabsResolved == null)
                 {
                     humanDef.inspectorTabsResolved = new List<InspectTabBase>();
                 }
-                var tabInstance = (InspectTabBase)Activator.CreateInstance(typeof(ITab_Pawn_Haki));
+                var tabInstance = (InspectTabBase)Activator.CreateInstance(typeof(ITabPawnHaki));
                 humanDef.inspectorTabsResolved.Add(tabInstance);
 
                 Log.Message("[Rim Piece] Haki Tab successfully injected into Human Def.");

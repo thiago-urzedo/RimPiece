@@ -5,14 +5,14 @@ using RimPiece.Components;
 
 namespace RimPiece.UI
 {
-    public class ITab_Pawn_Haki: ITab
+    public class ITabPawnHaki: ITab
     {
         private static readonly Vector2 WinSize = new Vector2(300f, 200f);
 
-        public ITab_Pawn_Haki()
+        public ITabPawnHaki()
         {
             this.size = WinSize;
-            this.labelKey = "RimPiece_TabHaki"; 
+            this.labelKey = "RimPieceTabHaki"; 
             this.tutorTag = "Haki";
         }
 
@@ -59,7 +59,8 @@ namespace RimPiece.UI
                 $"Armament (Lv {hakiComp.ArmamentLevel})", 
                 hakiComp.ArmamentXp, 
                 hakiComp.ArmamentMaxXp, 
-                Color.black);
+                Color.black,
+                hakiComp.ArmamentLevel == hakiComp.GetMaxLevel());
             
             currentY += 50f;
             
@@ -67,7 +68,8 @@ namespace RimPiece.UI
                 $"Observation (Lv {hakiComp.ObservationLevel})", 
                 hakiComp.ObservationXp, 
                 hakiComp.ObservationMaxXp, 
-                Color.cyan);
+                Color.black,
+                hakiComp.ObservationLevel == hakiComp.GetMaxLevel());
 
             currentY += 40f;
             
@@ -77,7 +79,7 @@ namespace RimPiece.UI
             GUI.EndGroup();
         }
 
-        private static void DrawHakiBar(Rect rect, string label, float cur, float max, Color barColor)
+        private static void DrawHakiBar(Rect rect, string label, float cur, float max, Color barColor, bool reachMaxLevel)
         {
             Widgets.Label(new Rect(rect.x, rect.y - 20f, rect.width, 20f), label);
             Widgets.DrawBoxSolid(rect, new Color(0.2f, 0.2f, 0.2f));
@@ -91,7 +93,7 @@ namespace RimPiece.UI
             Widgets.DrawBoxSolid(fillRect, barColor);
             Widgets.DrawBox(rect); 
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(rect, $"{cur:F0} / {max:F0}");
+            Widgets.Label(rect, reachMaxLevel ? "MAX" : $"{cur:F0} / {max:F0}");
             Text.Anchor = TextAnchor.UpperLeft;
         }
     }
