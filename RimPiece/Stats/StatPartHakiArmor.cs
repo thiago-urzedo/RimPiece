@@ -4,9 +4,10 @@ using RimPiece.Components;
 
 namespace RimPiece.Stats
 {
-    public class StatPartHakiArmor: StatPart
+    public class StatPartHakiArmor : StatPart
     {
-        private const float ArmorPerLevel = 0.04f; 
+        private const float ArmorPerLevel = 0.02f; 
+        private const float CoCArmorPerLevel = 0.04f;
 
         public override void TransformValue(StatRequest req, ref float val)
         {
@@ -23,6 +24,12 @@ namespace RimPiece.Stats
                 var bonus = haki.ArmamentLevel * ArmorPerLevel;
                 val += bonus; 
             }
+            
+            if (p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceConquerorInfusion")))
+            {
+                var bonus = (haki.ArmamentLevel * 0.75f) * CoCArmorPerLevel;
+                val += bonus; 
+            }
         }
 
         public override string ExplanationPart(StatRequest req)
@@ -33,13 +40,23 @@ namespace RimPiece.Stats
             if (p == null) return null;
 
             var haki = p.GetComp<CompHaki>();
-            if (haki != null && p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceArmamentHaki")))
+            if (haki == null) return null;
+            
+            var text = "";
+            
+            if (p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceArmamentHaki")))
             {
                 var bonus = haki.ArmamentLevel * ArmorPerLevel;
-                return $"Armament Haki (Lv {haki.ArmamentLevel}): +{bonus.ToStringPercent()}";
+                text += $"Armament Haki (Lv {haki.ArmamentLevel}): +{bonus.ToStringPercent()}\n";
             }
             
-            return null;
+            if (p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceConquerorInfusion")))
+            {
+                var bonus = (haki.ArmamentLevel * 0.75f) * CoCArmorPerLevel;
+                text += $"Conqueror's Haki: +{bonus.ToStringPercent()}\n";
+            }
+            
+            return text;
         }
     }
 }

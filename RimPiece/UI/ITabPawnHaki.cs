@@ -51,6 +51,8 @@ namespace RimPiece.UI
             
             var pawn = SelPawnForHaki;
             var hakiComp = pawn?.GetComp<CompHaki>(); 
+            var hasConqGene = pawn.genes != null &&
+                              pawn.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene"));
 
             if (hakiComp == null)
             {
@@ -80,11 +82,13 @@ namespace RimPiece.UI
                 hakiComp.ObservationMaxXp, 
                 Color.black,
                 hakiComp.ObservationLevel == hakiComp.GetMaxLevel());
-
-            currentY += 40f;
             
-            var conquerorsStatus = hakiComp.HasConquerors ? "Awakened" : "Dormant";
-            Widgets.Label(new Rect(0, currentY, rect.width, 24f), $"Conqueror's Haki: {conquerorsStatus}");
+            if (hasConqGene)
+            {
+                currentY += 40f;
+                var conquerorsStatus = hakiComp.HasConquerors ? "Awakened" : "Dormant";
+                Widgets.Label(new Rect(0, currentY, rect.width, 24f), $"Conqueror's Haki: {conquerorsStatus}");
+            }
 
             GUI.EndGroup();
         }

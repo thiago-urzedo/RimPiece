@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <SoundDef>
+        <defName>RimPieceSoundConquerorBlast</defName>
+        <context>MapOnly</context>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>Haki/conquerors</clipPath>
+                    </li>
+                </grains>
+            </li>
+        </subSounds>
+    </SoundDef>
+
+    <SoundDef>
+        <defName>RimPieceSoundArmamentHaki</defName>
+        <context>MapOnly</context>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>Haki/armament</clipPath>
+                    </li>
+                </grains>
+            </li>
+        </subSounds>
+    </SoundDef>
+
+    <SoundDef>
+        <defName>RimPieceSoundObservationHaki</defName>
+        <context>MapOnly</context>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>Haki/observation</clipPath>
+                    </li>
+                </grains>
+            </li>
+        </subSounds>
+    </SoundDef>
+
+    <SoundDef>
+        <defName>RimPieceSoundCoCInfusion</defName>
+        <context>MapOnly</context>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>Haki/infusion</clipPath>
+                    </li>
+                </grains>
+            </li>
+        </subSounds>
+    </SoundDef>
+</Defs>

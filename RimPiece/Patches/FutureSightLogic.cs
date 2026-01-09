@@ -11,14 +11,15 @@ namespace RimPiece.Patches
         public static bool Prefix(Projectile __instance, Thing hitThing)
         {
             if (__instance == null || __instance.Destroyed) return true;
-            if (__instance.def.projectile.explosionRadius > 0f) return true;
             
             if (hitThing is Pawn pawn && !pawn.Dead)
             {
                 var haki = pawn.GetComp<CompHaki>();
                 var isObservationActive = pawn.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
                 
-                if (haki != null && isObservationActive && haki.ObservationLevel >= 10)
+                if (__instance.def.projectile.explosionRadius > 0f && haki.ObservationLevel < 12) return true;
+                
+                if (haki != null && isObservationActive)
                 {
                     if (Rand.Value < haki.GetFutureSightChance())
                     {

@@ -2,6 +2,7 @@ using Verse;
 using RimWorld;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using TaranMagicFramework;
 using AbilityDef = TaranMagicFramework.AbilityDef;
 
@@ -11,12 +12,18 @@ namespace RimPiece.Components
     {
         private const int MaxLevel = 20;
         private const float LevelScalingMultiplier = 3f;
+
+        private const float ArmamentDrain = 1.0f;
+        private const float ObservationDrain = 1.0f;
+        private const float CoCInfusionDrain = 3.5f;
+        private const float PassiveRegen = 2f;
         
         private float _armamentXp;
         private int _armamentLevel;
         private float _observationXp;
         private int _observationLevel;
         private bool _hasConquerors;
+        private bool _levelsInitialized = false;
 
         public int ArmamentLevel => _armamentLevel;
         public float ArmamentXp => _armamentXp;
@@ -150,11 +157,6 @@ namespace RimPiece.Components
             return 1f - ((_observationLevel / (float)MaxLevel) * 0.40f);
         }
         
-        public void UnlockConquerors()
-        {
-            _hasConquerors = true;
-        }
-        
         private void CheckAndGrantAbilities(Pawn p)
         {
             if (p.story == null || !p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"))) return;
@@ -168,7 +170,10 @@ namespace RimPiece.Components
             if (hakiClass == null)
             {
                 hakiClass = compAbilities.CreateAbilityClass(hakiClassDef, true);
-                Messages.Message($"{p.LabelShort} awakened their Haki!", p, MessageTypeDefOf.PositiveEvent);
+                if (p.Faction != null && p.Faction.IsPlayer)
+                {
+                    Messages.Message($"{p.LabelShort} awakened their Haki!", p, MessageTypeDefOf.PositiveEvent);
+                }
             }
             else if (!hakiClass.Unlocked)
             {
@@ -178,7 +183,7 @@ namespace RimPiece.Components
             var armAbility = DefDatabase<AbilityDef>.GetNamed("RimPieceArmamentToggle");
             if (!hakiClass.Learned(armAbility))
             {
-                hakiClass.LearnAbility(armAbility, false, 0); 
+                hakiClass.LearnAbility(armAbility, false, 0);
             }
 
             var obsAbility = DefDatabase<AbilityDef>.GetNamed("RimPieceObservationToggle");
@@ -186,17 +191,202 @@ namespace RimPiece.Components
             {
                 hakiClass.LearnAbility(obsAbility, false, 0);
             }
+            
+            if (p.genes != null && p.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene")))
+            {
+                var conqTree = DefDatabase<AbilityTreeDef>.GetNamed("RimPieceConquerorHakiTree");
+                if (!hakiClass.TreeUnlocked(conqTree))
+                {
+                    hakiClass.UnlockTree(conqTree);
+                }
+                
+                if (_armamentLevel >= 6 && _observationLevel >= 6)
+                {
+                    var blast = DefDatabase<AbilityDef>.GetNamed("RimPieceConquerorBlast");
+                    if (!hakiClass.Learned(blast))
+                    {
+                        _hasConquerors = true;
+                        hakiClass.LearnAbility(blast, false, 0);
+                        if (p.Faction != null && p.Faction.IsPlayer)
+                        {
+                            Messages.Message($"{p.LabelShort} has awakened Conqueror's Haki!", p, MessageTypeDefOf.PositiveEvent);
+                        }
+                    }
+                }
+
+                if (_armamentLevel >= 16 && _observationLevel >= 16)
+                {
+                    var infusion = DefDatabase<AbilityDef>.GetNamed("RimPieceConquerorInfusion");
+                    if (!hakiClass.Learned(infusion))
+                    {
+                        hakiClass.LearnAbility(infusion, false, 0);
+                        if (p.Faction != null && p.Faction.IsPlayer)
+                        {
+                            Messages.Message($"{p.LabelShort} mastered Conqueror's Infusion!", p, MessageTypeDefOf.PositiveEvent);
+                        }
+                    }
+                }
+            }
+        }
+        
+        private void ManageEnergy(Pawn p)
+        {
+            
+            var compAbilities = p.GetComp<CompAbilities>();
+            if (compAbilities == null) return;
+
+            var resourceDef = DefDatabase<AbilityResourceDef>.GetNamed("RimPieceHakiResource");
+            var resource = compAbilities.GetAbilityResource(resourceDef);
+            if (resource == null) return;
+            
+            var hediffSet = p.health.hediffSet;
+            var armActive = hediffSet.HasHediff(HediffDef.Named("RimPieceArmamentHaki"));
+            var obsActive = hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
+            var infActive = hediffSet.HasHediff(HediffDef.Named("RimPieceConquerorInfusion"));
+            var isExhausted = hediffSet.HasHediff(HediffDef.Named("RimPieceHakiExhaustion"));
+            
+            if (armActive || obsActive || infActive)
+            {
+                if (!p.Drafted) ForceDisableAbilities(p, compAbilities);
+                
+                var totalDrain = 0f;
+                if (armActive) totalDrain += ArmamentDrain;
+                if (obsActive) totalDrain += ObservationDrain;
+                if (infActive) totalDrain += CoCInfusionDrain;
+
+                if (resource.energy >= totalDrain)
+                {
+                    resource.energy -= totalDrain;
+                }
+                else
+                {
+                    resource.energy = 0;
+                    ForceDisableAbilities(p, compAbilities);
+                    if (!isExhausted)
+                    {
+                        var exhaustion = HediffMaker.MakeHediff(HediffDef.Named("RimPieceHakiExhaustion"), p);
+                        hediffSet.AddDirect(exhaustion);
+                    }
+                    if (p.Faction != null && p.Faction.IsPlayer)
+                    {
+                        Messages.Message($"{p.LabelShort} ran out of Haki!", p, MessageTypeDefOf.NegativeEvent);
+                    }
+                }
+            }
+            else if (resource.energy < resource.MaxEnergy)
+            {
+                resource.energy += PassiveRegen;
+                if (resource.energy > resource.MaxEnergy)
+                {
+                    resource.energy = resource.MaxEnergy;
+                }
+            }
+        }
+
+        private void ForceDisableAbilities(Pawn p, CompAbilities compAbilities)
+        {
+            DisableToggle(compAbilities, "RimPieceArmamentToggle");
+            DisableToggle(compAbilities, "RimPieceObservationToggle");
+            DisableToggle(compAbilities, "RimPieceConquerorInfusion");
+        }
+
+        private void DisableToggle(CompAbilities comp, string abilityDefName)
+        {
+            var abilityDef = DefDatabase<AbilityDef>.GetNamed(abilityDefName, false);
+            if (abilityDef == null) return;
+
+            foreach (var ability in comp.AllLearnedAbilities.Where(ability => ability.def == abilityDef && ability.Active))
+            {
+                ability.End();
+                break;
+            }
+        }
+        
+        private void InitializeHakiData(Pawn p)
+        {
+            if (p == null || p.story == null) return;
+            
+            _levelsInitialized = true;
+
+            if (p.genes != null)
+            {
+                var cocGeneDef = DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene");
+                
+                if (cocGeneDef != null && !p.genes.HasActiveGene((cocGeneDef)))
+                {
+                    if (Rand.Value < 0.03f)
+                    {
+                        p.genes.AddGene(cocGeneDef, true);
+                    }
+                }
+            }
+
+            if (p.genes != null && p.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene")))
+            {
+                if (!p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser")))
+                {
+                    p.story.traits.GainTrait(new Trait(TraitDef.Named("RimPieceHakiUser")));
+                }
+            }
+
+            if (p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser")))
+            {
+                var power = p.kindDef.combatPower;
+                
+                var armamentPotentialLevel = Mathf.RoundToInt(power / 15f);
+                armamentPotentialLevel += Rand.Range(-3, 3);
+                armamentPotentialLevel = Mathf.Clamp(armamentPotentialLevel, 0, MaxLevel);
+                
+                var observationPotentialLevel = Mathf.RoundToInt(power / 15f);
+                observationPotentialLevel += Rand.Range(-3, 3);
+                observationPotentialLevel = Mathf.Clamp(observationPotentialLevel, 0, MaxLevel);
+
+                _armamentLevel = armamentPotentialLevel;
+                _observationLevel = observationPotentialLevel;
+                
+                _armamentXp = Rand.Range(0, ArmamentMaxXp);
+                _observationXp = Rand.Range(0, ObservationMaxXp);
+            }
+        }
+        
+        public override void CompTick()
+        {
+            base.CompTick();
+
+            // 1 second = 60 ticks
+            if (parent is Pawn p && p.Spawned && p.IsHashIntervalTick(60))
+            {
+                var isHakiUser = p.story != null && p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"));
+                if (isHakiUser)
+                {
+                    CheckAndGrantAbilities(p);
+                    ManageEnergy(p);
+                    
+                    if (!_levelsInitialized && p.Spawned)
+                    {
+                        InitializeHakiData(p);
+                    }
+                    
+                    // Gain little observation xp every second of combat, if engaging an enemy
+                    // TODO - review this in the future
+                    var isObservationActive = p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
+                    if (isObservationActive && p.Drafted && p.TargetCurrentlyAimingAt != null)
+                    {
+                        GainObservationXp(1f); 
+                    }
+                }
+            }
         }
         
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
             foreach (var g in base.CompGetGizmosExtra()) yield return g;
 
-            if (DebugSettings.godMode)
+            if (DebugSettings.godMode && parent is Pawn p && p.story != null && p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser")))
             {
                 yield return new Command_Action
                 {
-                    defaultLabel = "+100 Armament XP",
+                    defaultLabel = "[DEV] +100 Armament XP",
                     defaultDesc = "Instantly adds 100 XP to Armament Haki.",
                     icon = TexCommand.Attack,
                     action = () => 
@@ -207,7 +397,7 @@ namespace RimPiece.Components
                 
                 yield return new Command_Action
                 {
-                    defaultLabel = "+1000 Armament XP",
+                    defaultLabel = "[DEV] +1000 Armament XP",
                     defaultDesc = "Instantly adds 1000 XP to Armament Haki.",
                     icon = TexCommand.Attack,
                     action = () => 
@@ -218,7 +408,7 @@ namespace RimPiece.Components
 
                 yield return new Command_Action
                 {
-                    defaultLabel = "+100 Observation XP",
+                    defaultLabel = "[DEV] +100 Observation XP",
                     defaultDesc = "Instantly adds 100 XP to Observation Haki.",
                     icon = TexCommand.Attack, 
                     action = () => 
@@ -229,7 +419,7 @@ namespace RimPiece.Components
                 
                 yield return new Command_Action
                 {
-                    defaultLabel = "+1000 Observation XP",
+                    defaultLabel = "[DEV] +1000 Observation XP",
                     defaultDesc = "Instantly adds 1000 XP to Observation Haki.",
                     icon = TexCommand.Attack, 
                     action = () => 
@@ -240,43 +430,19 @@ namespace RimPiece.Components
                 
                 yield return new Command_Action
                 {
-                    defaultLabel = "Reset Haki",
+                    defaultLabel = "[DEV] Reset Haki",
                     defaultDesc = "Resets all levels to 0.",
-                    icon = TexCommand.ForbidOn,
+                    icon = TexCommand.Attack,
                     action = () => 
                     {
                         _armamentLevel = 0;
                         _armamentXp = 0;
                         _observationLevel = 0;
                         _observationXp = 0;
-                        // EnsureHediff();
+                        _hasConquerors = false;
                         Messages.Message("Haki levels reset.", MessageTypeDefOf.TaskCompletion, false);
                     }
                 };
-            }
-        }
-        
-        public override void CompTick()
-        {
-            base.CompTick();
-
-            // 1 second = 60 ticks
-            // Gain little observation xp every second of combat, if engaging an enemy
-            // TODO - review this in the future
-            if (parent is Pawn p && p.Spawned && p.IsHashIntervalTick(60))
-            {
-
-                var isHakiUser = p.story != null && p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"));
-                if (isHakiUser)
-                {
-                    CheckAndGrantAbilities(p);
-                    
-                    var isObservationActive = p.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
-                    if (isObservationActive && p.Drafted && p.TargetCurrentlyAimingAt != null)
-                    {
-                        GainObservationXp(1f); 
-                    }
-                }
             }
         }
         
@@ -288,6 +454,7 @@ namespace RimPiece.Components
             Scribe_Values.Look(ref _observationXp, "observationXP", 0f);
             Scribe_Values.Look(ref _observationLevel, "observationLevel", 0);
             Scribe_Values.Look(ref _hasConquerors, "hasConquerors", false);
+            Scribe_Values.Look(ref _levelsInitialized, "levelsInitialized", false);
         }
     }
 }

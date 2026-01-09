@@ -17,4 +17,46 @@
         <defaultLabelColor>(0.6, 0.8, 1.0)</defaultLabelColor>
         <isBad>false</isBad>
     </HediffDef>
+
+    <HediffDef>
+        <defName>RimPieceConquerorInfusion</defName>
+        <label>Conqueror's Infusion</label>
+        <description>Coat your attacks and your body in Conqueror's Haki.</description>
+        <hediffClass>RimPiece.Hediffs.HediffConquerorsHaki</hediffClass>
+        <defaultLabelColor>(0.6, 0.8, 1.0)</defaultLabelColor>
+        <isBad>false</isBad>
+    </HediffDef>
+
+    <HediffDef>
+        <defName>RimPieceHakiExhaustion</defName>
+        <label>Haki Exhaustion</label>
+        <description>This person has completely depleted their Haki reserves. They are physically drained and unable to focus.</description>
+        <defaultLabelColor>(0.8, 0.3, 0.3)</defaultLabelColor>
+        <hediffClass>HediffWithComps</hediffClass>
+        <isBad>true</isBad>
+        <comps>
+            <li Class="HediffCompProperties_Disappears">
+                <disappearsAfterTicks>3600</disappearsAfterTicks>
+                <showRemainingTime>true</showRemainingTime>
+            </li>
+        </comps>
+        <stages>
+            <li>
+                <capMods>
+                    <li>
+                        <capacity>Moving</capacity>
+                        <offset>-0.20</offset>
+                    </li>
+                    <li>
+                        <capacity>Manipulation</capacity>
+                        <offset>-0.10</offset>
+                    </li>
+                    <li>
+                        <capacity>Consciousness</capacity>
+                        <offset>-0.05</offset>
+                    </li>
+                </capMods>
+            </li>
+        </stages>
+    </HediffDef>
 </Defs>

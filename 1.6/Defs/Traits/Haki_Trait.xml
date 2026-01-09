@@ -2,13 +2,13 @@
 <Defs>
     <TraitDef>
         <defName>RimPieceHakiUser</defName>
-        <commonality>0.05</commonality>
+        <commonality>0.2</commonality>
         <degreeDatas>
             <li>
                 <label>Haki User</label>
                 <description>This person has awakened their Haki, granting them the ability to harden their body and predict attacks.</description>
                 <statOffsets>
-                    <MentalBreakThreshold>-0.05</MentalBreakThreshold>
+                    <MentalBreakThreshold>-0.1</MentalBreakThreshold>
                 </statOffsets>
             </li>
         </degreeDatas>

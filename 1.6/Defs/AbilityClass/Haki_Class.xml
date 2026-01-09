@@ -6,6 +6,7 @@
         <description>The power of ambition.</description>
         <abilityTrees>
             <li>RimPieceHakiTreeBasic</li>
+            <li>RimPieceConquerorHakiTree</li>
         </abilityTrees>
         <unlockedByDefault>false</unlockedByDefault>
         <usesXPSystem>false</usesXPSystem>
@@ -18,11 +19,17 @@
         <unlockedByDefault>true</unlockedByDefault>
     </TaranMagicFramework.AbilityTreeDef>
 
+    <TaranMagicFramework.AbilityTreeDef>
+        <defName>RimPieceConquerorHakiTree</defName>
+        <label>Conqueror Haki</label>
+        <unlockedByDefault>false</unlockedByDefault>
+    </TaranMagicFramework.AbilityTreeDef>
+
     <TaranMagicFramework.AbilityResourceDef>
         <defName>RimPieceHakiResource</defName>
         <label>Haki</label>
         <maxEnergyStat>RimPieceMaxHaki</maxEnergyStat>
-        <baseEnergyGainPerTick>0.1</baseEnergyGainPerTick>
+        <baseEnergyGainPerTick>0</baseEnergyGainPerTick>
     </TaranMagicFramework.AbilityResourceDef>
 
     <StatDef>
@@ -30,5 +37,8 @@
         <label>Max Haki</label>
         <defaultBaseValue>100</defaultBaseValue>
         <alwaysHide>true</alwaysHide>
+        <parts>
+            <li Class="RimPiece.Stats.StatHakiEnergyGrowth" />
+        </parts>
     </StatDef>
 </Defs>

@@ -13,20 +13,24 @@
         <abilityTiers>
             <li>RimPieceArmamentTier1</li>
         </abilityTiers>
+        <showWhenDrafted>true</showWhenDrafted>
+        <showWhenNotDrafted>false</showWhenNotDrafted>
     </TaranMagicFramework.AbilityDef>
 
     <TaranMagicFramework.AbilityTierDef>
         <defName>RimPieceArmamentTier1</defName>
         <label>Armament Hardening</label>
         <iconTexPath>UI/Icons/armament</iconTexPath>
-        <maxCharge>1</maxCharge>
-        <rechargeDuration>60</rechargeDuration>
-        <cooldownTicks>60</cooldownTicks>
+        <cooldownTicks>120</cooldownTicks>
         <castDurationTicks>0</castDurationTicks>
+        <soundOnCast>RimPieceSoundArmamentHaki</soundOnCast>
         <hediffProps>
             <hediff>RimPieceArmamentHaki</hediff>
             <onTarget>false</onTarget>
         </hediffProps>
+        <cannotBeActiveWithHediffs>
+            <li>RimPieceHakiExhaustion</li>
+        </cannotBeActiveWithHediffs>
     </TaranMagicFramework.AbilityTierDef>
 
     <TaranMagicFramework.AbilityDef>
@@ -42,18 +46,22 @@
         <abilityTiers>
             <li>RimPieceObservationTier1</li>
         </abilityTiers>
+        <showWhenDrafted>true</showWhenDrafted>
+        <showWhenNotDrafted>false</showWhenNotDrafted>
     </TaranMagicFramework.AbilityDef>
 
     <TaranMagicFramework.AbilityTierDef>
         <defName>RimPieceObservationTier1</defName>
         <label>Observation Focus</label>
         <iconTexPath>UI/Icons/observation</iconTexPath>
-        <maxCharge>1</maxCharge>
-        <rechargeDuration>60</rechargeDuration>
-        <cooldownTicks>60</cooldownTicks>
+        <cooldownTicks>120</cooldownTicks>
         <castDurationTicks>0</castDurationTicks>
+        <soundOnCast>RimPieceSoundObservationHaki</soundOnCast>
         <hediffProps>
             <hediff>RimPieceObservationHaki</hediff>
         </hediffProps>
+        <cannotBeActiveWithHediffs>
+            <li>RimPieceHakiExhaustion</li>
+        </cannotBeActiveWithHediffs>
     </TaranMagicFramework.AbilityTierDef>
 </Defs>

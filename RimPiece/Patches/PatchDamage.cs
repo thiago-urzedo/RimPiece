@@ -69,6 +69,7 @@ namespace RimPiece.Patches
                 
                 var attackerHaki = attacker.GetComp<CompHaki>();
                 var isArmamentActive = attacker.health.hediffSet.HasHediff(HediffDef.Named("RimPieceArmamentHaki"));
+                var isCocInfActive = attacker.health.hediffSet.HasHediff(HediffDef.Named("RimPieceConquerorInfusion"));
                 
                 if (attackerHaki != null && isArmamentActive)
                 {
@@ -94,7 +95,18 @@ namespace RimPiece.Patches
                         flatDmg = attackerHaki.GetArmamentFlatDamage();
                     }
                     
-                    var finalAmount = (dinfo.Amount * dmgFactor) +  flatDmg;
+                    var finalAmount = dinfo.Amount * dmgFactor +  flatDmg;
+
+                    if (isCocInfActive)
+                    {
+                        finalAP += 0.5f;
+                        finalAmount *= 1.5f;
+                        
+                        if (pawn != null && !pawn.Dead && Rand.Value < 0.10f)
+                        {
+                            pawn.stances.stunner.StunFor(30, attacker, true);
+                        }
+                    }
                     
                     dinfo = new DamageInfo(
                         dinfo.Def,
@@ -117,6 +129,7 @@ namespace RimPiece.Patches
                     {
                         dinfo.SetIgnoreArmor(true);
                     }
+                    
                 }
             }
         }

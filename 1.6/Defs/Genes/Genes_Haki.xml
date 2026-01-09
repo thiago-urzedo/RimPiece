@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <GeneDef>
+        <defName>RimPieceConquerorsGene</defName>
+        <label>Conqueror's Will</label>
+        <description>One in a million. This person possesses the qualities of a king.</description>
+        <iconPath>UI/Icons/conquerorg</iconPath> 
+        <biostatCpx>3</biostatCpx>
+        <biostatMet>0</biostatMet>
+        <forcedTraits>
+            <li>
+                <def>RimPieceHakiUser</def>
+            </li>
+        </forcedTraits>
+        <symbolPack>
+            <prefixSymbols>
+                <li><symbol>king</symbol></li>
+                <li><symbol>ruler</symbol></li>
+            </prefixSymbols>
+        </symbolPack>
+    </GeneDef>
+</Defs>

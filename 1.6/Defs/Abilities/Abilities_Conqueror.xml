@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <TaranMagicFramework.AbilityDef>
+        <defName>RimPieceConquerorBlast</defName>
+        <label>King's Pressure</label>
+        <description>Unleash your will to knock out weak-willed opponents.</description>
+        <uiSkillIcon>UI/Icons/conquerrors</uiSkillIcon>
+        <abilityClass>RimPiece.Abilities.AbilityKingsPressure</abilityClass>
+        <abilityModGroup>RimPieceModGroup</abilityModGroup>
+        <abilityTrees>
+            <li>RimPieceConquerorHakiTree</li>
+        </abilityTrees>
+        <abilityTiers>
+            <li>RimPieceConquerorBlastTier1</li>
+        </abilityTiers>
+        <showWhenDrafted>true</showWhenDrafted>
+        <showWhenNotDrafted>false</showWhenNotDrafted>
+    </TaranMagicFramework.AbilityDef>
+
+    <TaranMagicFramework.AbilityTierDef>
+        <defName>RimPieceConquerorBlastTier1</defName>
+        <label>King's Pressure</label>
+        <iconTexPath>UI/Icons/conquerrors</iconTexPath>
+        <cooldownTicks>5400</cooldownTicks>
+        <castDurationTicks>60</castDurationTicks>
+        <effectRadius>15</effectRadius>
+        <energyCost>50</energyCost>
+        <soundOnCast>RimPieceSoundConquerorBlast</soundOnCast>
+        <cannotBeActiveWithHediffs>
+            <li>RimPieceHakiExhaustion</li>
+        </cannotBeActiveWithHediffs>
+    </TaranMagicFramework.AbilityTierDef>
+
+    <TaranMagicFramework.AbilityDef>
+        <defName>RimPieceConquerorInfusion</defName>
+        <label>Conqueror's Infusion</label>
+        <description>Coat your attacks in Conqueror's Haki. Massive damage boost.</description>
+        <uiSkillIcon>UI/Icons/coating</uiSkillIcon>
+        <abilityClass>TaranMagicFramework.Ability_Toggleable</abilityClass>
+        <abilityModGroup>RimPieceModGroup</abilityModGroup>
+        <abilityTrees>
+            <li>RimPieceConquerorHakiTree</li>
+        </abilityTrees>
+        <abilityTiers>
+            <li>RimPieceConquerorInfusionTier1</li>
+        </abilityTiers>
+        <showWhenDrafted>true</showWhenDrafted>
+        <showWhenNotDrafted>false</showWhenNotDrafted>
+    </TaranMagicFramework.AbilityDef>
+
+    <TaranMagicFramework.AbilityTierDef>
+        <defName>RimPieceConquerorInfusionTier1</defName>
+        <label>Conqueror's Infusion</label>
+        <iconTexPath>UI/Icons/coating</iconTexPath>
+        <cooldownTicks>120</cooldownTicks>
+        <castDurationTicks>0</castDurationTicks>
+        <soundOnCast>RimPieceSoundCoCInfusion</soundOnCast>
+        <hediffProps>
+            <hediff>RimPieceConquerorInfusion</hediff>
+        </hediffProps>
+        <cannotBeActiveWithHediffs>
+            <li>RimPieceHakiExhaustion</li>
+        </cannotBeActiveWithHediffs>
+    </TaranMagicFramework.AbilityTierDef>
+</Defs>
