@@ -16,10 +16,10 @@ namespace RimPiece.Patches
             {
                 var haki = pawn.GetComp<CompHaki>();
                 var isObservationActive = pawn.health.hediffSet.HasHediff(HediffDef.Named("RimPieceObservationHaki"));
+
+                if (haki == null || (__instance.def.projectile.explosionRadius > 0f && haki.ObservationLevel < 12)) return true;
                 
-                if (__instance.def.projectile.explosionRadius > 0f && haki.ObservationLevel < 12) return true;
-                
-                if (haki != null && isObservationActive)
+                if (isObservationActive)
                 {
                     if (Rand.Value < haki.GetFutureSightChance())
                     {

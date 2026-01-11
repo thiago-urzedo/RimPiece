@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <HediffDef>
+        <defName>RimPieceOverwhelmed</defName>
+        <label>Conqueror's Pressure</label>
+        <description>This person's will is being crushed by a Conqueror's Haki. They feel an overwhelming urge to flee.</description>
+        <hediffClass>HediffWithComps</hediffClass>
+        <defaultLabelColor>(0.6, 0.4, 0.8)</defaultLabelColor> <maxSeverity>1.0</maxSeverity>
+        <isBad>true</isBad>
+        <comps>
+            <li Class="HediffCompProperties_SeverityPerDay">
+                <severityPerDay>-4.0</severityPerDay> </li>
+        </comps>
+        <stages>
+            <li>
+                <minSeverity>0.01</minSeverity>
+                <label>shaken</label>
+            </li>
+            <li>
+                <minSeverity>0.40</minSeverity>
+                <label>trembling</label>
+            </li>
+            <li>
+                <minSeverity>0.80</minSeverity>
+                <label>terrified</label>
+            </li>
+        </stages>
+    </HediffDef>
+    
+    <ThoughtDef>
+        <defName>RimPieceOverwhelmedThought</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>RimPieceOverwhelmed</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <stages>
+            <li>
+                <label>Intimidated by conqueror</label>
+                <description>Their presence... it's heavy. I can barely breathe.</description>
+                <baseMoodEffect>-10</baseMoodEffect>
+            </li>
+            <li>
+                <label>Crushed by will</label>
+                <description>I can't win. I need to get out of here!</description>
+                <baseMoodEffect>-20</baseMoodEffect>
+            </li>
+            <li>
+                <label>Conqueror's terror</label>
+                <description>RUN! JUST RUN!</description>
+                <baseMoodEffect>-35</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+</Defs>

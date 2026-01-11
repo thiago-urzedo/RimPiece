@@ -69,10 +69,16 @@
         <Compile Include="Hediffs\HediffArmamentHaki.cs" />
         <Compile Include="Hediffs\HediffConquerorsHaki.cs" />
         <Compile Include="Hediffs\HediffObservationHaki.cs" />
+        <Compile Include="Jobs\JobDriverLearnHaki.cs" />
+        <Compile Include="Jobs\JobDriverTrainHaki.cs" />
+        <Compile Include="Patches\PatchConquerorInfusion.cs" />
         <Compile Include="Patches\PatchDamage.cs" />
         <Compile Include="Patches\FutureSightLogic.cs" />
+        <Compile Include="Patches\PatchFloatMenu.cs" />
         <Compile Include="Patches\PatchStats.cs" />
+        <Compile Include="Patches\PatchTrapAvoidance.cs" />
         <Compile Include="Patches\PatchUniversalProjectile.cs" />
+        <Compile Include="Patches\PatchWeaponDurability.cs" />
         <Compile Include="RimPiece.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Stats\StatHakiEnergyGrowth.cs" />

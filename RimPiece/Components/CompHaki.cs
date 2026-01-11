@@ -11,19 +11,47 @@ namespace RimPiece.Components
     public class CompHaki: ThingComp
     {
         private const int MaxLevel = 20;
-        private const float LevelScalingMultiplier = 3f;
+        private const float LevelScalingMultiplier = 2f;
 
         private const float ArmamentDrain = 1.0f;
         private const float ObservationDrain = 1.0f;
-        private const float CoCInfusionDrain = 3.5f;
+        private const float CoCInfusionDrain = 2.5f;
         private const float PassiveRegen = 2f;
+        private const int TrainingCooldownTicks = 420000;
         
         private float _armamentXp;
         private int _armamentLevel;
         private float _observationXp;
         private int _observationLevel;
-        private bool _hasConquerors;
         private bool _levelsInitialized = false;
+        private int _lastTrainingTick = -999999;
+        
+        private static TraitDef _hakiUserTraitDef;
+        private static TraitDef HakiUserTrait
+        {
+            get
+            {
+                if (_hakiUserTraitDef == null)
+                {
+                    _hakiUserTraitDef = TraitDef.Named("RimPieceHakiUser");
+                }
+
+                return _hakiUserTraitDef;
+            }
+        }
+        
+        private static GeneDef _conqGeneDef;
+        private static GeneDef ConqGeneDef
+        {
+            get
+            {
+                if (_conqGeneDef == null)
+                {
+                    _conqGeneDef = DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene");
+                }
+                return _conqGeneDef;
+            }
+        }
 
         public int ArmamentLevel => _armamentLevel;
         public float ArmamentXp => _armamentXp;
@@ -32,7 +60,8 @@ namespace RimPiece.Components
         public float ObservationXp => _observationXp;
         public float ObservationMaxXp => Mathf.Min((_observationLevel + 1) * 100f, 3000f);
 
-        public bool HasConquerors => _hasConquerors;
+        public bool IsHakiUser { get; private set; }
+        public bool IsConqueror { get; private set; }
 
         public int GetMaxLevel()
         {
@@ -156,10 +185,31 @@ namespace RimPiece.Components
             if (_observationLevel < 1) return 1f;
             return 1f - ((_observationLevel / (float)MaxLevel) * 0.40f);
         }
+
+        public float GetTrapAvoidance()
+        {
+            return 0.10f + (_observationLevel * 0.04f);
+        }
+        
+        public bool CanTrainOthers()
+        {
+            if (ArmamentLevel < 16 && ObservationLevel < 16) return false;
+            return (Find.TickManager.TicksGame - _lastTrainingTick) >= TrainingCooldownTicks;
+        }
+
+        public int TicksUntilNextTrain()
+        {
+            return TrainingCooldownTicks - (Find.TickManager.TicksGame - _lastTrainingTick);
+        }
+
+        public void Notify_TrainingCompleted()
+        {
+            _lastTrainingTick = Find.TickManager.TicksGame;
+        }
         
         private void CheckAndGrantAbilities(Pawn p)
         {
-            if (p.story == null || !p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"))) return;
+            if (!IsHakiUser) return;
             
             var compAbilities = p.GetComp<CompAbilities>();
             if (compAbilities == null) return;
@@ -192,7 +242,7 @@ namespace RimPiece.Components
                 hakiClass.LearnAbility(obsAbility, false, 0);
             }
             
-            if (p.genes != null && p.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene")))
+            if (IsConqueror)
             {
                 var conqTree = DefDatabase<AbilityTreeDef>.GetNamed("RimPieceConquerorHakiTree");
                 if (!hakiClass.TreeUnlocked(conqTree))
@@ -205,7 +255,6 @@ namespace RimPiece.Components
                     var blast = DefDatabase<AbilityDef>.GetNamed("RimPieceConquerorBlast");
                     if (!hakiClass.Learned(blast))
                     {
-                        _hasConquerors = true;
                         hakiClass.LearnAbility(blast, false, 0);
                         if (p.Faction != null && p.Faction.IsPlayer)
                         {
@@ -321,15 +370,15 @@ namespace RimPiece.Components
                 }
             }
 
-            if (p.genes != null && p.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene")))
+            if (IsConqueror)
             {
-                if (!p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser")))
+                if (!IsHakiUser)
                 {
                     p.story.traits.GainTrait(new Trait(TraitDef.Named("RimPieceHakiUser")));
                 }
             }
 
-            if (p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser")))
+            if (IsHakiUser)
             {
                 var power = p.kindDef.combatPower;
                 
@@ -349,6 +398,27 @@ namespace RimPiece.Components
             }
         }
         
+        private void UpdateCachedVariables(Pawn p)
+        {
+            IsConqueror = p.genes != null && ConqGeneDef != null && p.genes.HasActiveGene(ConqGeneDef);
+            IsHakiUser = p.story != null && HakiUserTrait != null && p.story.traits.HasTrait(HakiUserTrait);
+        }
+        
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            base.PostSpawnSetup(respawningAfterLoad);
+            
+            if (parent is Pawn p)
+            {
+                UpdateCachedVariables(p); 
+                
+                if (!respawningAfterLoad && !_levelsInitialized && p.Spawned) 
+                {
+                    InitializeHakiData(p);
+                }
+            }
+        }
+        
         public override void CompTick()
         {
             base.CompTick();
@@ -356,16 +426,10 @@ namespace RimPiece.Components
             // 1 second = 60 ticks
             if (parent is Pawn p && p.Spawned && p.IsHashIntervalTick(60))
             {
-                var isHakiUser = p.story != null && p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"));
-                if (isHakiUser)
+                if (IsHakiUser)
                 {
                     CheckAndGrantAbilities(p);
                     ManageEnergy(p);
-                    
-                    if (!_levelsInitialized && p.Spawned)
-                    {
-                        InitializeHakiData(p);
-                    }
                     
                     // Gain little observation xp every second of combat, if engaging an enemy
                     // TODO - review this in the future
@@ -373,6 +437,12 @@ namespace RimPiece.Components
                     if (isObservationActive && p.Drafted && p.TargetCurrentlyAimingAt != null)
                     {
                         GainObservationXp(1f); 
+                    }
+                    
+                    // Gain little observation xp every second of meditation or hunting
+                    if (p.CurJob != null && (p.CurJob.def == JobDefOf.Meditate || p.CurJob.def == JobDefOf.Hunt) && !p.pather.Moving)
+                    {
+                        GainObservationXp(1f);
                     }
                 }
             }
@@ -382,7 +452,7 @@ namespace RimPiece.Components
         {
             foreach (var g in base.CompGetGizmosExtra()) yield return g;
 
-            if (DebugSettings.godMode && parent is Pawn p && p.story != null && p.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser")))
+            if (DebugSettings.godMode && IsHakiUser)
             {
                 yield return new Command_Action
                 {
@@ -439,7 +509,6 @@ namespace RimPiece.Components
                         _armamentXp = 0;
                         _observationLevel = 0;
                         _observationXp = 0;
-                        _hasConquerors = false;
                         Messages.Message("Haki levels reset.", MessageTypeDefOf.TaskCompletion, false);
                     }
                 };
@@ -453,8 +522,8 @@ namespace RimPiece.Components
             Scribe_Values.Look(ref _armamentLevel, "armamentLevel", 0);
             Scribe_Values.Look(ref _observationXp, "observationXP", 0f);
             Scribe_Values.Look(ref _observationLevel, "observationLevel", 0);
-            Scribe_Values.Look(ref _hasConquerors, "hasConquerors", false);
             Scribe_Values.Look(ref _levelsInitialized, "levelsInitialized", false);
+            Scribe_Values.Look(ref _lastTrainingTick, "lastTrainingTick", -999999);
         }
     }
 }

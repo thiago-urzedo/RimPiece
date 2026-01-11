@@ -16,12 +16,12 @@ namespace RimPiece.Stats
             var haki = p.GetComp<CompHaki>();
             if (haki == null) return;
             
-            var levelBonus = (haki.ArmamentLevel + haki.ObservationLevel) * 10f;
+            var levelBonus = (haki.ArmamentLevel + haki.ObservationLevel) * 20f;
             val += levelBonus;
             
-            if (p.genes != null && p.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene")))
+            if (haki.IsConqueror)
             {
-                val += 100f;
+                val += 200f;
             }
         }
         
@@ -40,12 +40,12 @@ namespace RimPiece.Stats
             var totalLevels = haki.ArmamentLevel + haki.ObservationLevel;
             if (totalLevels > 0)
             {
-                text += $"Haki energy: +{totalLevels * 10}\n";
+                text += $"Haki stamina: +{totalLevels * 10}\n";
             }
 
-            if (p.genes != null && p.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene")))
+            if (haki.IsConqueror)
             {
-                text += "Conqueror's Gene: +100\n";
+                text += "Conqueror's Gene: +200\n";
             }
 
             return text;

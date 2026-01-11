@@ -18,7 +18,7 @@ namespace RimPiece.Abilities
             
             foreach (var t in GenRadial.RadialDistinctThingsAround(pawn.Position, pawn.Map, radius, true))
             {
-                if (t is Pawn p && p != this.pawn && !p.Dead)
+                if (t is Pawn p && p != this.pawn && !p.Dead && p.Spawned && !p.RaceProps.IsMechanoid)
                 {
                     victims.Add(p);
                 }
@@ -38,10 +38,11 @@ namespace RimPiece.Abilities
             var attackerHaki = pawn.GetComp<CompHaki>();
             var attackerPower = (attackerHaki != null) ? (attackerHaki.ArmamentLevel + attackerHaki.ObservationLevel) : 0;
 
-            var victimSameFaction = victim.Faction.IsPlayer;
             var defense = 0;
             var victimHaki = victim.GetComp<CompHaki>();
-            if (victimHaki != null)
+            var victimSameFaction = victim.Faction != null && victim.Faction.IsPlayer;
+            
+            if (victimHaki != null && victimHaki.IsHakiUser)
             {
                 defense = victimHaki.ArmamentLevel + victimHaki.ObservationLevel;
             }

@@ -37,10 +37,8 @@ namespace RimPiece.UI
             get
             {
                 var pawn = this.SelPawnForHaki;
-
-                if (pawn == null || pawn.story == null) return false;
-
-                return pawn.story.traits.HasTrait(TraitDef.Named("RimPieceHakiUser"));
+                var hakiComp = pawn?.GetComp<CompHaki>(); 
+                return pawn != null && hakiComp.IsHakiUser;
             }
         }
 
@@ -50,11 +48,9 @@ namespace RimPiece.UI
             GUI.BeginGroup(rect);
             
             var pawn = SelPawnForHaki;
-            var hakiComp = pawn?.GetComp<CompHaki>(); 
-            var hasConqGene = pawn.genes != null &&
-                              pawn.genes.HasActiveGene(DefDatabase<GeneDef>.GetNamed("RimPieceConquerorsGene"));
+            var hakiComp = pawn?.GetComp<CompHaki>();
 
-            if (hakiComp == null)
+            if (hakiComp == null || !hakiComp.IsHakiUser)
             {
                 Widgets.Label(rect, "This entity cannot use Haki.");
                 GUI.EndGroup();
@@ -72,7 +68,9 @@ namespace RimPiece.UI
                 hakiComp.ArmamentXp, 
                 hakiComp.ArmamentMaxXp, 
                 Color.black,
-                hakiComp.ArmamentLevel == hakiComp.GetMaxLevel());
+                hakiComp.ArmamentLevel == hakiComp.GetMaxLevel(),
+                "Gain XP by dealing damage (melee or ranged) while Armament Haki is active."
+            );
             
             currentY += 50f;
             
@@ -81,19 +79,24 @@ namespace RimPiece.UI
                 hakiComp.ObservationXp, 
                 hakiComp.ObservationMaxXp, 
                 Color.black,
-                hakiComp.ObservationLevel == hakiComp.GetMaxLevel());
+                hakiComp.ObservationLevel == hakiComp.GetMaxLevel(),
+                "Gain XP by engaging in combat, dodging attacks, meditating and hunting."
+            );
             
-            if (hasConqGene)
+            if (hakiComp.IsConqueror)
             {
                 currentY += 40f;
-                var conquerorsStatus = hakiComp.HasConquerors ? "Awakened" : "Dormant";
-                Widgets.Label(new Rect(0, currentY, rect.width, 24f), $"Conqueror's Haki: {conquerorsStatus}");
+                var conquerorsStatus = (hakiComp.ArmamentLevel > 6 && hakiComp.ObservationLevel > 6) ? "Awakened" : "Dormant";
+                var conqRect = new Rect(0, currentY, rect.width, 24f);
+                
+                Widgets.Label(conqRect, $"Conqueror's Haki: {conquerorsStatus}");
+                TooltipHandler.TipRegion(conqRect, "The disposition of a King. Cannot be trained, only inherited by the strong.");
             }
 
             GUI.EndGroup();
         }
 
-        private static void DrawHakiBar(Rect rect, string label, float cur, float max, Color barColor, bool reachMaxLevel)
+        private static void DrawHakiBar(Rect rect, string label, float cur, float max, Color barColor, bool reachMaxLevel, string tooltipMsg)
         {
             Widgets.Label(new Rect(rect.x, rect.y - 20f, rect.width, 20f), label);
             Widgets.DrawBoxSolid(rect, new Color(0.2f, 0.2f, 0.2f));
@@ -109,6 +112,11 @@ namespace RimPiece.UI
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(rect, reachMaxLevel ? "MAX" : $"{cur:F0} / {max:F0}");
             Text.Anchor = TextAnchor.UpperLeft;
+
+            if (!tooltipMsg.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(rect, tooltipMsg);
+            }
         }
     }
 }

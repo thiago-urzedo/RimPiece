@@ -5,7 +5,7 @@
         <label>Conqueror's Will</label>
         <description>One in a million. This person possesses the qualities of a king.</description>
         <iconPath>UI/Icons/conquerorg</iconPath> 
-        <biostatCpx>3</biostatCpx>
+        <biostatCpx>5</biostatCpx>
         <biostatMet>0</biostatMet>
         <forcedTraits>
             <li>

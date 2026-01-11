@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <JobDef>
+        <defName>RimPieceTeachHaki</defName>
+        <driverClass>RimPiece.Jobs.JobDriverTrainHaki</driverClass>
+        <reportString>Teaching Haki to TargetA.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>
+    <JobDef>
+        <defName>RimPieceLearnHaki</defName>
+        <driverClass>RimPiece.Jobs.JobDriverLearnHaki</driverClass>
+        <reportString>Learning Haki from TargetA.</reportString>
+        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+    </JobDef>
+</Defs>
