@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <TaranMagicFramework.AbilityClassDef>
+        <defName>RimPieceDevilFruitClass</defName>
+        <label>Devil Fruit Power</label>
+        <description>Powers granted by eating a Devil Fruit.</description>
+        <abilityTrees>
+            <li>RimPieceDevilFruitTree</li>
+        </abilityTrees>
+        <unlockedByDefault>false</unlockedByDefault>
+        <usesXPSystem>false</usesXPSystem>
+    </TaranMagicFramework.AbilityClassDef>
+    
+    <TaranMagicFramework.AbilityTreeDef>
+        <defName>RimPieceDevilFruitTree</defName>
+        <label>Devil Fruit Power</label>
+        <unlockedByDefault>false</unlockedByDefault>
+    </TaranMagicFramework.AbilityTreeDef>
+</Defs>

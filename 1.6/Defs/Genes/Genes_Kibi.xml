@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <GeneDef>
+        <defName>RimPieceGeneKibiKibi</defName>
+        <label>Kibi Kibi no Mi Power</label>
+        <description>Carries the power of the Kibi Kibi no Mi, allowing the user to create dumplings that tame animals.</description>
+        <iconPath>UI/Icons/fruit</iconPath>
+        <displayCategory>RimPieceDevilFruits</displayCategory>
+        <geneClass>RimPiece.Genes.GeneDevilFruit</geneClass>
+        <biostatCpx>3</biostatCpx>
+        <biostatMet>0</biostatMet>
+        <aptitudes>
+            <Animals>5</Animals>
+        </aptitudes>
+        <modExtensions>
+            <li Class="RimPiece.Genes.GeneExtensionTMF">
+                <tmfAbility>RimPieceAbilityKibiDango</tmfAbility>
+            </li>
+        </modExtensions>
+    </GeneDef>
+</Defs>

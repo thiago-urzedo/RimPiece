@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThingDef ParentName="OrganicProductBase">
+        <defName>RimPieceFruitKibiKibi</defName>
+        <label>Kibi Kibi no Mi</label>
+        <description>A mysterious purple fruit shaped like a cluster of dumplings. Eating it grants the power to tame beasts, but curse you with an inability to swim.</description>
+        <thingClass>RimPiece.Items.ParameciaFruit</thingClass>
+        <graphicData>
+            <texPath>Things/Icons/KibiKibiNoMi</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <statBases>
+            <MarketValue>8500</MarketValue>
+            <Mass>0.5</Mass>
+            <Nutrition>1.0</Nutrition>
+        </statBases>
+        <ingestible>
+            <foodType>Processed</foodType>
+            <preferability>DesperateOnly</preferability>
+        </ingestible>
+        <modExtensions>
+            <li Class="RimPiece.Defs.DevilFruitExtension">
+                <geneToGrant>RimPieceGeneKibiKibi</geneToGrant>
+                <fruitType>Paramecia</fruitType>
+            </li>
+        </modExtensions>
+    </ThingDef>
+</Defs>

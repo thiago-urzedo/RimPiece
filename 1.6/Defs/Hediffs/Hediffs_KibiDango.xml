@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <HediffDef>
+        <defName>RimPieceKibiDangoControl</defName>
+        <label>Kibi Dango Controlled</label>
+        <description>This creature is under the influence of the Kibi Kibi no Mi. It is loyal to the one who fed it the dango. If the master dies, the creature will fly into a berserk rage.</description>
+        <hediffClass>RimPiece.Hediffs.HediffKibiDango</hediffClass>
+        <defaultLabelColor>(0.8, 0.4, 0.8)</defaultLabelColor>
+        <isBad>false</isBad>
+        <comps>
+            <li Class="HediffCompProperties_Disappears">
+                <showRemainingTime>true</showRemainingTime>
+            </li>
+        </comps>
+    </HediffDef>
+</Defs>

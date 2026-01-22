@@ -8,6 +8,10 @@
     <description>The One Piece is real!</description>
     <modDependencies>
         <li>
+            <packageId>Ludeon.RimWorld.Biotech</packageId>
+            <displayName>RimWorld - Biotech</displayName>
+        </li>
+        <li>
             <packageId>brrainz.harmony</packageId>
             <displayName>Harmony</displayName>
             <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077</steamWorkshopUrl>
@@ -21,6 +25,7 @@
         </li>
     </modDependencies>
     <loadAfter>
+        <li>Ludeon.RimWorld.Biotech</li>
         <li>brrainz.harmony</li>
         <li>Taranchuk.TaranMagicFramework</li>
     </loadAfter>

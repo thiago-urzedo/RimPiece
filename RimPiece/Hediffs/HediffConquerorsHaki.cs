@@ -8,7 +8,7 @@ namespace RimPiece.Hediffs
     {
         public override UnityEngine.Color LabelColor => UnityEngine.Color.cyan;
         
-        public override string Description => "Unlimited Power: The user coats their attacks with Conqueror's Haki. Massive damage boost.";
+        public override string Description => "Conqueror's Power: The user coats their attacks with Conqueror's Haki. Massive damage boost.";
 
         public override string TipStringExtra
         {
@@ -20,13 +20,16 @@ namespace RimPiece.Hediffs
                 var p = this.pawn;
                 var hakiComp = p?.GetComp<CompHaki>();
 
-                if (hakiComp != null && hakiComp.ObservationLevel >= 16 && hakiComp.ArmamentLevel >= 16)
+                if (hakiComp != null && hakiComp.ObservationLevel + hakiComp.ArmamentLevel >= 30)
                 {
+                    var armourBonus = hakiComp.ArmamentLevel * 0.05f;
+                    
                     sb.AppendLine("--- Coating Stats ---");
                     
                     sb.AppendLine($"Melee AP Bonus: +50%");
                     sb.AppendLine($"Melee Dmg: x1.5");
                     sb.AppendLine($"Stun Chance: 10%");
+                    sb.AppendLine($"Armour Bonus: +{armourBonus:P0}");
                 }
                 return sb.ToString().TrimEnd();
             }

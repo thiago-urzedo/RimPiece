@@ -1,7 +1,6 @@
 using Verse;
 using Verse.AI;
 using System.Collections.Generic;
-using RimPiece.Components;
 
 namespace RimPiece.Jobs
 {

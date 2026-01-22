@@ -250,7 +250,7 @@ namespace RimPiece.Components
                     hakiClass.UnlockTree(conqTree);
                 }
                 
-                if (_armamentLevel >= 6 && _observationLevel >= 6)
+                if (_armamentLevel + _observationLevel >= 12)
                 {
                     var blast = DefDatabase<AbilityDef>.GetNamed("RimPieceConquerorBlast");
                     if (!hakiClass.Learned(blast))
@@ -263,7 +263,7 @@ namespace RimPiece.Components
                     }
                 }
 
-                if (_armamentLevel >= 16 && _observationLevel >= 16)
+                if (_armamentLevel + _observationLevel >= 30)
                 {
                     var infusion = DefDatabase<AbilityDef>.GetNamed("RimPieceConquerorInfusion");
                     if (!hakiClass.Learned(infusion))
@@ -398,7 +398,7 @@ namespace RimPiece.Components
             }
         }
         
-        private void UpdateCachedVariables(Pawn p)
+        public void UpdateCachedVariables(Pawn p)
         {
             IsConqueror = p.genes != null && ConqGeneDef != null && p.genes.HasActiveGene(ConqGeneDef);
             IsHakiUser = p.story != null && HakiUserTrait != null && p.story.traits.HasTrait(HakiUserTrait);

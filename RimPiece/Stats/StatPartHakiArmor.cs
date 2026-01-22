@@ -6,8 +6,8 @@ namespace RimPiece.Stats
 {
     public class StatPartHakiArmor : StatPart
     {
-        private const float ArmorPerLevel = 0.02f; 
-        private const float CoCArmorPerLevel = 0.04f;
+        private const float ArmorPerLevel = 0.03f; 
+        private const float CoCArmorPerLevel = 0.05f;
 
         public override void TransformValue(StatRequest req, ref float val)
         {

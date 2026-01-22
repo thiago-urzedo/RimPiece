@@ -64,11 +64,18 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Abilities\AbilityKingsPressure.cs" />
+        <Compile Include="Abilities\AbilityKibiDango.cs" />
         <Compile Include="Components\CompHaki.cs" />
         <Compile Include="Components\CompPropertiesHaki.cs" />
+        <Compile Include="Defs\DevilFruitExtension.cs" />
+        <Compile Include="Genes\GeneDevilFruit.cs" />
+        <Compile Include="Genes\GeneExtensionTMF.cs" />
         <Compile Include="Hediffs\HediffArmamentHaki.cs" />
         <Compile Include="Hediffs\HediffConquerorsHaki.cs" />
+        <Compile Include="Hediffs\HediffKibiDango.cs" />
         <Compile Include="Hediffs\HediffObservationHaki.cs" />
+        <Compile Include="Items\DevilFruit.cs" />
+        <Compile Include="Items\ParameciaFruit.cs" />
         <Compile Include="Jobs\JobDriverLearnHaki.cs" />
         <Compile Include="Jobs\JobDriverTrainHaki.cs" />
         <Compile Include="Patches\PatchConquerorInfusion.cs" />

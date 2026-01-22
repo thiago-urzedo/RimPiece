@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <TaranMagicFramework.AbilityDef>
+        <defName>RimPieceAbilityKibiDango</defName>
+        <label>Kibi Dango</label>
+        <description>Pinch a dango from your cheek and feed it to a animal to tame it.</description>
+        <uiSkillIcon>UI/Icons/Abilities/KibiPinch</uiSkillIcon>
+        <abilityClass>RimPiece.Abilities.AbilityKibiDango</abilityClass>
+        <abilityModGroup>RimPieceModGroup</abilityModGroup>
+        <abilityTrees>
+            <li>RimPieceDevilFruitTree</li>
+        </abilityTrees>
+        <abilityTiers>
+            <li>RimPieceKibiDango1</li>
+        </abilityTiers>
+        <showWhenDrafted>true</showWhenDrafted>
+        <showWhenNotDrafted>true</showWhenNotDrafted>
+    </TaranMagicFramework.AbilityDef>
+    
+    <TaranMagicFramework.AbilityTierDef>
+        <defName>RimPieceKibiDango1</defName>
+        <label>Dango Pinch</label>
+        <iconTexPath>UI/Icons/Abilities/KibiPinch</iconTexPath>
+        <cooldownTicks>60000</cooldownTicks>
+        <castDurationTicks>60</castDurationTicks>
+        <energyCost>0</energyCost>
+        <targetingParameters>
+            <canTargetPawns>true</canTargetPawns>
+            <canTargetBuildings>false</canTargetBuildings>
+            <canTargetSelf>false</canTargetSelf>
+        </targetingParameters>
+        <requireLineOfSight>true</requireLineOfSight>
+        <effectRadius>10</effectRadius>
+    </TaranMagicFramework.AbilityTierDef>
+</Defs>

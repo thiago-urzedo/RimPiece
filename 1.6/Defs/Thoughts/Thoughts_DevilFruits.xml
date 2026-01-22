@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <ThoughtDef>
+        <defName>RimPieceAteDevilFruit</defName>
+        <durationDays>0.25</durationDays>
+        <stackLimit>1</stackLimit>
+        <stages>
+            <li>
+                <label>ate devil fruit</label>
+                <description>That strange fruit tastes awful.</description>
+                <baseMoodEffect>-10</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+</Defs>

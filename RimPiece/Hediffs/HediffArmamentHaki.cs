@@ -47,7 +47,7 @@ namespace RimPiece.Hediffs
                     if (flatDmg > 0) sb.AppendLine($"Melee Flat Dmg: +{flatDmg:F1}");
 
                     var reduction = 1f - hakiComp.GetIncomingDamageFactor();
-                    var armourBonus = hakiComp.ArmamentLevel * 0.04f;
+                    var armourBonus = hakiComp.ArmamentLevel * 0.03f;
                     sb.AppendLine($"Damage Reduction: {reduction:P1}");
                     sb.AppendLine($"Armour Bonus: +{armourBonus:P0}");
                     

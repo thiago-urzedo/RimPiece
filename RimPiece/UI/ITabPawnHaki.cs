@@ -86,11 +86,11 @@ namespace RimPiece.UI
             if (hakiComp.IsConqueror)
             {
                 currentY += 40f;
-                var conquerorsStatus = (hakiComp.ArmamentLevel > 6 && hakiComp.ObservationLevel > 6) ? "Awakened" : "Dormant";
+                var conquerorsStatus = (hakiComp.ArmamentLevel + hakiComp.ObservationLevel >= 12) ? "Awakened" : "Dormant";
                 var conqRect = new Rect(0, currentY, rect.width, 24f);
                 
                 Widgets.Label(conqRect, $"Conqueror's Haki: {conquerorsStatus}");
-                TooltipHandler.TipRegion(conqRect, "The disposition of a King. Cannot be trained, only inherited by the strong.");
+                TooltipHandler.TipRegion(conqRect, "The disposition of a King. Only inherited by the strong.");
             }
 
             GUI.EndGroup();

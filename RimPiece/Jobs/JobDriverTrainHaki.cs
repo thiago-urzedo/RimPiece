@@ -37,7 +37,6 @@ namespace RimPiece.Jobs
                     pawn.rotationTracker.FaceTarget(Student);
                     Student.rotationTracker.FaceTarget(pawn);
 
-                    MoteMaker.ThrowText(pawn.DrawPos, Map, "Teaching...", Color.white);
                     if (pawn.IsHashIntervalTick(600))
                     {
                         FleckMaker.ThrowMicroSparks(Student.DrawPos, Map);
@@ -69,6 +68,7 @@ namespace RimPiece.Jobs
             if (!studentComp.IsHakiUser)
             {
                 Student.story.traits.GainTrait(new Trait(TraitDef.Named("RimPieceHakiUser")));
+                studentComp.UpdateCachedVariables(Student);
                 studentComp.CompTick(); 
                 
                 Messages.Message($"{Student.LabelShort} has awakened Haki under {pawn.LabelShort}'s guidance!", Student, MessageTypeDefOf.PositiveEvent);
@@ -78,13 +78,12 @@ namespace RimPiece.Jobs
                 var levelDiffArm = Mathf.Max(0, masterComp.ArmamentLevel - studentComp.ArmamentLevel);
                 var levelDiffObs = Mathf.Max(0, masterComp.ObservationLevel - studentComp.ObservationLevel);
 
-                var xpGainArm = levelDiffArm * 200f;
-                var xpGainObs = levelDiffObs * 200f;
-
+                var xpGainArm = levelDiffArm * 800f;
+                var xpGainObs = levelDiffObs * 800f;
                 if (xpGainArm > 0) studentComp.GainArmamentXp(xpGainArm);
                 if (xpGainObs > 0) studentComp.GainObservationXp(xpGainObs);
 
-                Messages.Message($"{Student.LabelShort} completed Haki training.", Student, MessageTypeDefOf.PositiveEvent);
+                Messages.Message($"{pawn.LabelShort} taught Haki to {Student.LabelShort}.", Student, MessageTypeDefOf.PositiveEvent);
             }
 
             masterComp.Notify_TrainingCompleted();
